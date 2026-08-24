@@ -23,6 +23,8 @@ Trang chính là `website/index.html`. File `website/tdg_tea.html` được gi�
 - Form `Book a tasting` hiện chỉ mô phỏng trạng thái gửi thành công, chưa kết nối email hoặc CRM.
 - Giá `$25 / box` là giá demo, cần xác nhận lại đơn vị tiền tệ và giá chính thức.
 - Các claim liên quan sức khỏe cần được duyệt nội dung trước khi phát hành production.
+- Đã bổ sung 12 infographic công dụng và thành phần cho 6 sản phẩm trong `website/CÔNG DỤNG/` và `website/THÀNH PHẦN/`.
+- Bộ infographic hiện giữ nguyên chất lượng gốc và có dung lượng khoảng 221,6 MB; cần tạo bản web tối ưu trước production để giảm thời gian tải.
 
 ## Việc cần bổ sung
 

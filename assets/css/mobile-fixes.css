@@ -1,0 +1,150 @@
+/* ============================================
+   TDG Tea — Mobile Fixes (VINRO-19)
+   Drop-in stylesheet: link AFTER existing styles
+   ============================================ */
+
+/* ---------- 1. Overflow-x fix (root cause) ---------- */
+html, body {
+  overflow-x: hidden;
+  overflow-x: clip; /* modern, no scroll-bar jump */
+}
+.shell, .page, main {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+/* Prevent any child from creating horizontal scroll */
+*, *::before, *::after {
+  max-width: 100%;
+}
+img, video, iframe, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- 2. 100dvh hero (mobile viewport units) ---------- */
+.product-visual {
+  min-height: 28rem; /* fallback */
+  min-height: 100dvh; /* dynamic viewport height */
+}
+@media (min-width: 768px) {
+  .product-visual {
+    min-height: 42rem;
+    min-height: 100dvh;
+  }
+}
+/* Hero sections on index.html */
+.hero, .hero-section, [class*="hero"] {
+  min-height: 100vh; /* fallback */
+  min-height: 100dvh;
+}
+
+/* ---------- 3. Disable parallax / sticky blur on iOS & touch ---------- */
+@media (hover: none), (pointer: coarse) {
+  .site-header {
+    position: relative; /* remove sticky on touch */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Kill any parallax transforms on touch devices */
+  [data-parallax], .parallax, [class*="parallax"] {
+    transform: none !important;
+    will-change: auto !important;
+  }
+}
+/* iOS-specific: backdrop-filter causes repaint storms */
+@supports (-webkit-touch-callout: none) {
+  .site-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(250,248,245,.98); /* solid fallback */
+  }
+}
+
+/* ---------- 4. Carousel / switcher swipe support ---------- */
+.product-switcher {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.product-switcher button {
+  scroll-snap-align: start;
+  touch-action: pan-x pan-y; /* allow vertical scroll, horizontal swipe */
+  min-height: 44px; /* Apple HIG touch target */
+  min-width: 44px;
+}
+/* Hide scrollbar but keep swipe */
+.product-switcher::-webkit-scrollbar {
+  display: none;
+}
+.product-switcher {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ---------- 5. Remove duplicate burger / fix nav overlap ---------- */
+.header-nav {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+@media (max-width: 640px) {
+  .header-nav a:not(.back):not(.back-link) {
+    display: none; /* hide non-essential links on mobile */
+  }
+  .header {
+    padding: 1rem;
+  }
+  .brand svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-right: -0.75rem;
+  }
+  .brand {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+  }
+}
+
+/* ---------- 6. General mobile polish ---------- */
+@media (max-width: 640px) {
+  .product-intro {
+    padding: 2rem 1rem 3rem;
+    gap: 1.5rem;
+  }
+  .product-title {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+  .detail-section, .benefits-section, .selector {
+    padding: 3rem 1rem;
+  }
+  .footer {
+    padding: 1.5rem 1rem;
+    border-radius: 1rem 1rem 0 0;
+  }
+  /* Prevent text overflow */
+  .product-summary, .detail-card p, .benefits-section p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
+/* ---------- 7. Safe-area insets (notched devices) ---------- */
+@supports (padding: max(0px)) {
+  .header, .footer, .page {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .footer {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------- 8. Reduced motion (already partial, reinforce) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

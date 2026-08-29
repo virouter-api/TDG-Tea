@@ -1,0 +1,93 @@
+/* ============================================================
+   TDG Tea — Motion Design Tokens (VINRO-18)
+   One shared timing/easing system for every animation on the site.
+   HOW TO USE: paste this block at the TOP of the existing <style>
+   in index.html (right after the `:root{...}` color block), then
+   replace the hard-coded durations/easings noted in each section
+   comment with these variables.
+   ============================================================ */
+
+:root{
+  /* Easing — one entrance curve + one exit curve, used everywhere */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.30, 1);   /* entrances, reveals */
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);  /* cards, UI elements */
+  --ease-in-out-quint: cubic-bezier(0.65, 0, 0.35, 1); /* exits, loader */
+
+  /* Duration scale — pick from this scale, never invent new values */
+  --dur-instant: 120ms;   /* micro feedback (hover states) */
+  --dur-fast: 260ms;      /* exits, small UI transitions */
+  --dur-base: 420ms;      /* captions, dots, small reveals */
+  --dur-slow: 700ms;      /* word/line reveals */
+  --dur-slower: 900ms;    /* section-level reveals */
+  --dur-hero: 1100ms;     /* hero title word reveal */
+
+  /* Stagger rhythm — consistent delay step between siblings */
+  --stagger-tight: 70ms;
+  --stagger-base: 110ms;
+  --stagger-loose: 140ms;
+}
+
+/* ------------------------------------------------------------
+   REPLACEMENT MAP (existing value -> token):
+
+   Loader:
+     transition: transform 850ms cubic-bezier(0.65,0,0.35,1)
+       -> transform var(--dur-slower) var(--ease-in-out-quint)
+     (JS: EXIT constant 850 -> 900 to match --dur-slower)
+
+   Hero title:
+     transition: transform 1100ms / opacity 1100ms cubic-bezier(0.16,1,0.3,1)
+       -> var(--dur-hero) var(--ease-out-expo)
+     (JS stagger 140ms -> keep, equals --stagger-loose)
+
+   Tagline / stacked titles / ghost words:
+     900ms / 950ms / 700ms cubic-bezier(0.16,1,0.3,1)
+       -> var(--dur-slow) var(--ease-out-expo)  (unify to ONE duration)
+
+   Cards (collection, badge, program, court, stat, testimonial):
+     800ms / 900ms / 1000ms cubic-bezier(0.22,1,0.36,1)
+       -> var(--dur-slower) var(--ease-out-quart)
+
+   Showcase gallery:
+     keep per-state --gallery-duration (560–820ms) but change every
+     cubic-bezier(0.22,1,0.36,1) -> var(--ease-out-quart)
+     and cubic-bezier(0.65,0,0.35,1) -> var(--ease-in-out-quint)
+
+   Carousel dots / hover states:
+     transition: all 0.3s / 0.4s -> var(--dur-fast) / var(--dur-base) ease
+   ------------------------------------------------------------ */
+
+/* GPU promotion for animated elements — compositing hints only,
+   no layout-affecting properties */
+.hero-title .word-clip span,
+.tagline .line-clip span,
+.stacked-title .line-clip span,
+.ghost-word span,
+.collection-card,
+.badge-card,
+.product-card,
+.court-card,
+.stat-cell,
+.testimonial-card,
+.showcase-slide{
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Remove will-change after animation completes to free memory.
+   (JS in motion.js removes the class via transitionend) */
+.motion-done{
+  will-change: auto !important;
+}
+
+/* Respect reduced motion — already present, kept for reference:
+   @media (prefers-reduced-motion: reduce) { ... }
+*/
+
+/* Touch devices: disable heavy continuous effects (idle float,
+   parallax handled in JS via matchMedia('(hover: hover)')) */
+@media (hover: none), (pointer: coarse){
+  .showcase-slide.active:not(.is-entering):not(.is-leaving){
+    animation: none !important; /* no idle float on touch */
+  }
+}

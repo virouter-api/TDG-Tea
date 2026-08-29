@@ -231,3 +231,36 @@
   opacity: 0.6;
   margin-bottom: 0.5rem;
 }
+
+/* ---------- Legacy hero transition bridge ---------- */
+/* Keep the existing hero markup/animation while aligning it with the
+   landing-page spacing and responsive behavior. */
+.hero {
+  min-height: 100dvh;
+  height: auto;
+  isolation: isolate;
+}
+.hero-title {
+  width: 100%;
+  max-width: var(--text-max);
+  margin-left: auto;
+  margin-right: auto;
+  font-size: clamp(2.5rem, 11vw, 7rem);
+  line-height: 0.92;
+  overflow-wrap: break-word;
+}
+.hero-bottom {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 639px) {
+  .hero-title {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: clamp(2.5rem, 14vw, 5rem);
+  }
+  .hero-bottom { padding-left: 1rem; padding-right: 1rem; }
+  .hero-copy { width: 100%; }
+}
